@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV | Danilo Castillero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Warm neutrals with muted blue and gold accents) -->
+    <!-- Application Structure Plan: A single-page dashboard design. Key sections (Professional Profile, Experience, Technical Skills, Education) are accessed via a top navigation bar. The core interaction is an interactive career timeline where clicking a job populates a detail view. This transforms the linear resume into an engaging, exploratory experience, allowing users to quickly grasp career progression and skill sets. A skills chart provides a data-driven summary. -->
+    <!-- Visualization & Content Choices: Professional Profile -> Inform -> Stat Cards & Text -> HTML/CSS -> Highlights key metrics and overall summary. Experience -> Explore -> Interactive Timeline -> JS DOM Manipulation -> Shows career progression interactively with detailed descriptions on click. Technical Skills -> Organize/Compare -> Skill Tags & Bar Chart -> HTML/CSS & Chart.js/Canvas -> Categorizes skills and visualizes proficiency. Education -> Inform -> Styled List -> HTML/CSS -> Clear and readable presentation of academic and professional attainments. All choices avoid SVG/Mermaid and prioritize interaction and clarity. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #e5e7eb; /* stone-200 */
+            border: 4px solid #f3f4f6; /* stone-100 */
+            transition: all 0.3s ease;
+        }
+        .timeline-item.active::before {
+            background-color: #0369a1; /* sky-700 */
+            border-color: #e0f2fe; /* sky-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width for chart container */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height for charts */
+            max-height: 400px; /* Max height for charts */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px; /* Adjust height for medium screens */
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="container mx-auto max-w-6xl p-4 sm:p-6 md:p-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-900">Danilo Castillero</h1>
+            <p class="text-stone-600 mt-2">Project Manager | IT Leadership</p>
+            <div class="mt-4 flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-stone-500">
+                <span>1401 Blair Mill Rd, Silver Spring, MD, 20910</span>
+                <span class="hidden sm:inline">•</span>
+                <span>+1 204-688-3048</span>
+                <span class="hidden sm:inline">•</span>
+                <a href="mailto:docastillero@hotmail.com" class="hover:text-sky-700">docastillero@hotmail.com</a>
+            </div>
+        </header>
+        
+        <nav class="sticky top-0 z-10 bg-stone-50/80 backdrop-blur-md py-4 mb-12 border-b border-stone-200">
+            <ul class="flex flex-wrap justify-center space-x-4 sm:space-x-8">
+                <li><a href="#profile" class="text-stone-600 hover:text-sky-800 font-medium whitespace-nowrap">Professional Profile</a></li>
+                <li><a href="#experience" class="text-stone-600 hover:text-sky-800 font-medium whitespace-nowrap">Experience</a></li>
+                <li><a href="#skills" class="text-stone-600 hover:text-sky-800 font-medium whitespace-nowrap">Technical Skills</a></li>
+                <li><a href="#education" class="text-stone-600 hover:text-sky-800 font-medium whitespace-nowrap">Education</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="profile" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-sky-900 border-b-2 border-amber-400 pb-2 mb-6">Professional Profile</h2>
+                <div class="grid md:grid-cols-3 gap-6 mb-8 text-center">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+                        <p class="text-3xl font-bold text-sky-800">10+</p>
+                        <p class="text-stone-600">Years IT Project Leadership</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+                        <p class="text-3xl font-bold text-sky-800">Global</p>
+                        <p class="text-stone-600">Cross-Functional Team Management</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200">
+                        <p class="text-3xl font-bold text-sky-800">Digital Transformation</p>
+                        <p class="text-stone-600">CX focused</p>
+                    </div>
+                </div>
+                <p class="text-stone-700 leading-relaxed">
+                    Project Manager with over 10 years of experience leading IT projects on a global scale, managing cross-functional teams across diverse regions. Specializes in identifying and mitigating risks, optimizing project delivery, and ensuring outcomes align with strategic and quality objectives. Proficient in agile frameworks and traditional project management methodologies, always focused on excellence and continuous improvement to drive digital transformation and create lasting value. This section provides a concise overview of my expertise and career focus, highlighting key areas of impact.
+                </p>
+            </section>
+
+            <section id="experience" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-sky-900 border-b-2 border-amber-400 pb-2 mb-6">Experience</h2>
+                <div class="text-center mb-8 text-stone-600">
+                    <p>This section details my professional journey. Select a role from the left timeline to view specific responsibilities, achievements, and the scope of projects undertaken. This interactive format allows for a quick understanding of my career progression and a deeper dive into individual roles.</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="md:w-1/3">
+                        <div id="timeline-nav" class="relative border-l-2 border-stone-200 ml-4">
+                        </div>
+                    </div>
+                    <div class="md:w-2/3">
+                        <div id="experience-details" class="bg-white p-6 rounded-lg shadow-md border border-stone-200 min-h-[300px] transition-all duration-300">
+                            <p class="text-stone-500">Select a role from the timeline to view details.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-sky-900 border-b-2 border-amber-400 pb-2 mb-6">Technical Skills</h2>
+                <div class="text-center mb-8 text-stone-600">
+                    <p>My technical and specialized skills are categorized below for clarity. The accompanying chart provides a visual representation of my proficiency in key methodologies and tools, showcasing a strong foundation for diverse project environments.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" id="skills-grid">
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-stone-200">
+                    <h3 class="text-xl font-bold text-sky-800 mb-4 text-center">Methodology & Tool Proficiency</h3>
+                    <div class="chart-container relative">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="education" class="scroll-mt-24">
+                 <h2 class="text-3xl font-bold text-sky-900 border-b-2 border-amber-400 pb-2 mb-6">Education</h2>
+                 <div class="text-center mb-8 text-stone-600">
+                    <p>This section outlines my academic background and professional certifications, demonstrating a commitment to continuous learning and professional development relevant to project management and IT leadership.</p>
+                </div>
+                 <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2025</span>
+                        <span>Lean Leadership Professional Certification | Certiprof</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2024</span>
+                        <span>Business Administration Bachelor’s Degree | Aden University</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2022</span>
+                        <span>Lean Six Sigma Yellow Belt | Certiprof</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2022</span>
+                        <span>Scrum Master Certified | CertiProf</span>
+                    </div>
+                     <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2021</span>
+                        <span>Business Continuity Certification | Ernesto Bazan Corporation / The BCP Organization</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2017</span>
+                        <span>ITIL v3 certification</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2013-2016</span>
+                        <span>Information Technology Technical Degree | Universidad Latina de Panamá</span>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-stone-200 flex flex-col sm:flex-row items-start sm:items-center">
+                        <span class="text-sky-700 font-bold w-full sm:w-24 flex-shrink-0 mb-1 sm:mb-0">2002 -2004</span>
+                        <span>Science High School Degree | Instituto América</span>
+                    </div>
+                 </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-16 pt-8 border-t border-stone-200">
+            <p class="text-sm text-stone-500">&copy; 2025 Danilo Castillero. Interactive CV created to showcase project management and technical expertise.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const experienceData = [
+                {
+                    company: "Foundever",
+                    role: "IT Project Manager",
+                    period: "2022 - 2025",
+                    details: [
+                        "Lead global IT initiatives, managing cross-functional teams across regions to implement software, hardware, communications, and IT infrastructure, ensuring on-time delivery.",
+                        "Identified risks, obstacles, and opportunities, developing mitigation plans to ensure business continuity and customer satisfaction.",
+                        "Supervised project coordination teams, promoting excellence in the delivery of technological solutions.",
+                        "Directed strategic projects such as migrations to Microsoft O365, MFA, and SAP SuccessFactors, as well as AD integrations and hardware provisioning coordination for multiple users in LATAM, the US, and the UK, enhancing security and operational efficiency.",
+                        "Kept stakeholders informed about progress, risks, and solutions throughout the project lifecycle.",
+                        "Led and delivered globally impactful projects with a cumulative budget of $5.1 million USD, driving strategic initiatives and cross-functional coordination."
+                    ]
+                },
+                {
+                    company: "Cooperativa Profesionales, R.L.",
+                    role: "IT Project Manager / Administrador de Proyectos",
+                    period: "2018-2022",
+                    details: [
+                        "Led strategic IT projects using traditional methodologies and agile frameworks to ensure alignment with the company's annual objectives.",
+                        "Identified risks at early project stages, mitigated impacts, and managed cross-functional teams in both administrative and operational areas.",
+                        "Implemented key technological solutions, such as Banking Core Optimization, Banking messaging systems compliant with ISO 22301 standards, Cooperativa Profesionales Website and Online Banking, Mobile App Development, Customer and Business Risk Management Systems, as well as many customer service solutions.",
+                        "Planned and executed improvements in critical systems, including transactional batch process optimizations, queue management platforms and teller systems.",
+                        "Supported the development of processes and best practices for cybersecurity and business continuity, contributing to corporate strategic plans.",
+                        "Executed high-priority project initiatives aligned with strategic business goals, managing a $4.5 million USD budget to ensure timely and cost-effective outcomes."
+                    ]
+                },
+                {
+                    company: "SSTI, S.A.",
+                    role: "Field Services Engineer",
+                    period: "2017",
+                    details: [
+                        "Implemented ITIL best practices for IT management, ensuring compliance with corporate standards.",
+                        "Provided efficient technical support to end users and IT assets, resolving incidents and enhancing user experience.",
+                        "Managed technological resources, including procurement, logistics, and inventory management, ensuring operational availability.",
+                        "Led the implementation of solutions to improve efficiency and IT process management.",
+                        "Diagnosed and resolved complex technical issues, ensuring operational continuity and adherence to organizational policies.",
+                        "Oversaw implementation and lifecycle management of IT assets valued at $600K USD, enhancing operational reliability and asset tracking efficiency."
+                    ]
+                },
+                {
+                    company: "Dell Panamá",
+                    role: "Service Delivery Project Manager",
+                    period: "2017",
+                    details: [
+                        "Oversaw the end-to-end delivery of enterprise-level professional services across the U.S. and Latin America, with a primary focus on deploying networking equipment, servers, and storage solutions within customer data centers.",
+                        "Managed multiple concurrent projects, successfully delivering over 25 infrastructure deployment initiatives.",
+                        "Drove full project lifecycle activities including project initiation, scoping, resource allocation, scheduling, and budget tracking.",
+                        "Ensured seamless coordination between technical teams, clients, and stakeholders, maintaining a strong commitment to customer satisfaction.",
+                        "Achieved an average Customer Satisfaction Score (CSAT) of 91+ points through proactive communication, issue resolution, and quality service delivery.",
+                        "Directed enterprise-level customer implementations, effectively managing an estimated budget of $250K USD while ensuring alignment with client requirements and timelines."
+                    ]
+                },
+                {
+                    company: "HP Enterprise Panamá",
+                    role: "AS400 & z/OS ITO Consultant, PMO Support Specialist",
+                    period: "2011-2017",
+                    details: [
+                        "Worked on Service Delivery Teams for AS400 and z/OS as Tech Support Consultant.",
+                        "Collaborated closely with HP clients and account executives to successfully plan and coordinate complex application migrations from decommissioned data centers to new infrastructure.",
+                        "Led end-to-end migration planning, ensuring all stakeholders were informed and aligned with timelines, risk assessments, and technical requirements.",
+                        "Conducted comprehensive migration audits to validate compliance, data integrity, and operational continuity.",
+                        "Actively participated in cross-functional committees, representing project management processes and defending them before Risk Management, Quality Assurance (QA), and Change Management leaders.",
+                        "Supported the PMO with documentation, reporting, and process governance to ensure alignment with organizational standards and regulatory requirements.",
+                        "Managed IT asset portfolios totaling $50 million USD and successfully led the migration of over 480 servers to modern physical and cloud-based infrastructures, resulting in $785K USD in annual cost savings."
+                    ]
+                }
+            ];
+
+            const skillsData = [
+                {
+                    category: "Specialized Skills",
+                    items: ["Agile (SCRUM)", "Traditional Waterfall", "Lean Methodology", "Business Continuity Planning", "ITIL v3 Framework", "Change Management"]
+                },
+                {
+                    category: "Project & Collaboration Tools",
+                    items: ["Jira", "Confluence", "Monday.com", "MS Project", "Trello", "Smartsheet", "Asana", "Microsoft Teams", "Slack"]
+                },
+                {
+                    category: "Productivity & Office Applications",
+                    items: ["Microsoft Office Suite (Excel, Word, PowerPoint, Outlook)", "Google Workspace (Docs, Sheets, Slides, Drive)", "SharePoint"]
+                },
+                {
+                    category: "Operating Systems",
+                    items: ["Windows (Home, Pro, Server Editions)", "macOS", "Linux (Ubuntu/CentOS)"]
+                },
+                {
+                    category: "IT & Technical Support",
+                    items: ["LAN/WAN/Wi-Fi Networking", "Hardware Troubleshooting", "Home and Enterprise Laptop/Desktop Support", "Remote Desktop Tools (e.g., TeamViewer, Any Desk)"]
+                },
+                {
+                    category: "CRM & ERP Platforms",
+                    items: ["Workday", "Oracle NetSuite", "Zoho CRM", "Odoo"]
+                },
+                {
+                    category: "Web & eCommerce Platforms",
+                    items: ["WordPress", "Shopify", "WooCommerce", "Wix", "Squarespace"]
+                },
+                {
+                    category: "Other Tools & Skills",
+                    items: ["Cybersecurity Fundamentals", "AWS Cloud fundamentals", "Basic SQL", "Data Analysis & Reporting", "Version Control (Git)", "Incident & Service Request Management (ServiceNow, Fresh service)", "VPN & Endpoint Security"]
+                }
+            ];
+
+            const methodologyProficiency = {
+                labels: ['Agile (SCRUM)', 'Waterfall', 'Jira/Confluence', 'MS Project', 'Risk Mitigation', 'Stakeholder Mgt.'],
+                data: [95, 85, 98, 80, 92, 97]
+            };
+
+            const timelineNav = document.getElementById('timeline-nav');
+            const experienceDetailsContainer = document.getElementById('experience-details');
+            const skillsGrid = document.getElementById('skills-grid');
+
+            experienceData.forEach((job, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item relative pl-8 pb-8 cursor-pointer';
+                item.innerHTML = `
+                    <h4 class="font-bold text-sky-800">${job.role}</h4>
+                    <p class="text-sm text-stone-600">${job.company}</p>
+                    <p class="text-xs text-stone-500">${job.period}</p>
+                `;
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.timeline-item').forEach(el => el.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    const detailsHTML = `
+                        <h3 class="text-2xl font-bold text-sky-900 mb-2">${job.role}</h3>
+                        <p class="text-md font-medium text-stone-700 mb-1">${job.company}</p>
+                        <p class="text-sm text-stone-500 mb-4">${job.period}</p>
+                        <ul class="space-y-3 list-disc list-inside text-stone-600">
+                            ${job.details.map(d => `<li>${d}</li>`).join('')}
+                        </ul>
+                    `;
+                    experienceDetailsContainer.innerHTML = detailsHTML;
+                });
+                timelineNav.appendChild(item);
+
+                if (index === 0) {
+                    item.click();
+                }
+            });
+            
+            skillsData.forEach(skillGroup => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-lg shadow-sm border border-stone-200';
+                let itemsHTML = skillGroup.items.map(item => `<span class="inline-block bg-sky-100 text-sky-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full">${item}</span>`).join('');
+                card.innerHTML = `
+                    <h4 class="font-bold text-sky-800 mb-2">${skillGroup.category}</h4>
+                    <div>${itemsHTML}</div>
+                `;
+                skillsGrid.appendChild(card);
+            });
+
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: methodologyProficiency.labels.map(label => {
+                        const words = label.split(' ');
+                        let wrappedLabel = '';
+                        let currentLine = '';
+                        words.forEach(word => {
+                            if ((currentLine + word).length > 16 && currentLine.length > 0) {
+                                wrappedLabel += currentLine + '\n';
+                                currentLine = word + ' ';
+                            } else {
+                                currentLine += word + ' ';
+                            }
+                        });
+                        wrappedLabel += currentLine;
+                        return wrappedLabel.trim();
+                    }),
+                    datasets: [{
+                        label: 'Proficiency Level',
+                        data: methodologyProficiency.data,
+                        backgroundColor: 'rgba(3, 105, 161, 0.6)', /* sky-700 with opacity */
+                        borderColor: 'rgba(3, 105, 161, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%'
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 0,
+                                minRotation: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.querySelectorAll('nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
